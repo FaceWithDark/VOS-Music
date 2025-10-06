@@ -34,3 +34,6 @@ go.work.sum
 # Mardown file
 *.md
 !README.md
+
+# Binary folder (this will be attached to the RELEASES instead)
+bin/
