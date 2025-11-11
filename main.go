@@ -78,7 +78,8 @@ func main() {
 					fmt.Println("Coming soon!")
 
 				case 3:
-					fmt.Println("Coming soon!")
+					fmt.Println("Goodbye...")
+					return;
 
 				default:
 					fmt.Println("Please try again!")
