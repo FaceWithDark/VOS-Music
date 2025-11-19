@@ -13,7 +13,7 @@ func appIntro() {
 	var options = []string{
 		"1. Add new music",
 		"2. Search for music",
-		"3. Exit the program\n",
+		"3. Exit the program",
 	}
 
 	fmt.Println(greet)
@@ -28,7 +28,7 @@ func main() {
 
 	var musicLibrary = make(map[string]string)
 	for {
-		fmt.Print("Enter your option here: ")
+		fmt.Print("\nEnter your option here: ")
 		var userOption int 
 		_ , userError := fmt.Scan(&userOption)
 		if (userError != nil) {
@@ -43,13 +43,6 @@ func main() {
 						fmt.Println("Error reading composer input:", composerError)
 						return
 					} else {
-						/*
-						 * Go (and languages support multi-declare variables) will
-						 * have pretty funny errors when nesting methods so it's
-						 * better to re-assign value to existent variable.
-						 */
-
-						// Trim <Enter> input (Go treated as '\n')
 						musicComposer = strings.TrimSpace(musicComposer)
 					}
 
@@ -61,28 +54,41 @@ func main() {
 						fmt.Println("Error reading title input:", titleError)
 						return
 					} else {
-						/*
-						 * Go (and languages support multi-declare variables) will
-						 * have pretty funny errors when nesting methods so it's
-						 * better to re-assign value to existent variable.
-						 */
-
-						// Trim <Enter> input (Go treated as '\n')
 						musicTitle = strings.TrimSpace(musicTitle)
 					}
 
 					musicLibrary[musicComposer] = musicTitle
-					fmt.Println(musicLibrary)
 
 				case 2:
-					fmt.Println("Coming soon!")
+					musicSearchInput := bufio.NewReader(os.Stdin)
+					fmt.Print("Enter music title or composer here: ")
+					musicSearch, searchError := musicSearchInput.ReadString('\n')
+							
+					if searchError != nil {
+						fmt.Println("Error reading search input:", searchError)
+						return
+					} else {
+						musicSearch = strings.TrimSpace(musicSearch)
+
+						foundSearch := false // The easiest way to do comparision logic in a for-loop
+						for composer, title := range musicLibrary {
+							if musicSearch == composer || musicSearch == title {
+								foundSearch = true
+								fmt.Printf("Composer: %s\nTitle: %s\n", composer, title)
+							}
+						}
+
+						if (!foundSearch) {
+							fmt.Println("Music seaech result not found. Perhaps is it not yet added to the app?")
+						}
+					}
 
 				case 3:
 					fmt.Println("Goodbye...")
 					return;
 
 				default:
-					fmt.Println("Please try again!")
+					fmt.Println("Invalid choice. Please try again!")
 			}
 		}
 	}
