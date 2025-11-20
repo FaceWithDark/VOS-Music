@@ -1,10 +1,11 @@
 package main
-
 import (
     "bufio"
     "fmt"
     "os"
+	"os/exec"
     "strings"
+	"time"
 )
 
 func appIntro() {
@@ -21,6 +22,16 @@ func appIntro() {
 	for _, option := range options {
 		fmt.Println(option)
 	}
+}
+
+func appClearOutput() {
+	// Wipe the terminal screen for better TUI experiences
+	clearCommand := exec.Command("clear")
+	clearCommand.Stdout = os.Stdout
+	clearCommand.Run()
+
+	// Then output the intro message again
+	appIntro()
 }
 
 func main() {
@@ -56,8 +67,17 @@ func main() {
 					} else {
 						musicTitle = strings.TrimSpace(musicTitle)
 					}
-
-					musicLibrary[musicComposer] = musicTitle
+					
+					if (len(musicLibrary) == 0) {
+						musicLibrary[musicComposer] = musicTitle
+						fmt.Print("New music added to the app. Returning back for choosing other options...")
+						time.Sleep(2000 * time.Millisecond)
+						appClearOutput()
+					} else {
+						fmt.Println("Update new music to the app. Returning back for choosing other options...")
+						time.Sleep(2000 * time.Millisecond)
+						appClearOutput()
+					}
 
 				case 2:
 					musicSearchInput := bufio.NewReader(os.Stdin)
@@ -75,11 +95,14 @@ func main() {
 							if musicSearch == composer || musicSearch == title {
 								foundSearch = true
 								fmt.Printf("Composer: %s\nTitle: %s\n", composer, title)
+								fmt.Println("Returning back for choosing other options...")
+								time.Sleep(2000 * time.Millisecond)
+								appClearOutput()
 							}
 						}
 
 						if (!foundSearch) {
-							fmt.Println("Music seaech result not found. Perhaps is it not yet added to the app?")
+							fmt.Println("Music search result not found. Please try again!")
 						}
 					}
 
